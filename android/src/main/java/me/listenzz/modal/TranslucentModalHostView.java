@@ -28,15 +28,17 @@ public class TranslucentModalHostView extends ReactModalHostView {
         if (dialog != null) {
             setStatusBarTranslucent(dialog.getWindow(), true);
             setStatusBarColor(dialog.getWindow(), Color.TRANSPARENT);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setStatusBarStyle(dialog.getWindow(), isDark());
-            }
+            setStatusBarStyle(dialog.getWindow(), isDark());
         }
     }
 
     @TargetApi(23)
     private boolean isDark() {
         Activity activity = ((ReactContext) getContext()).getCurrentActivity();
+        // fix activity NPE
+        if (activity == null) {
+            return true;
+        }
         return (activity.getWindow().getDecorView().getSystemUiVisibility() & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0;
     }
 
